@@ -4,7 +4,7 @@
     <li class="item" v-for="user in usersRaw" :key="user.id">
       <div class="col basic">
         <div class="userId">
-          <p>{{ user.user_id }}</p>
+          <p>{{ user.id }}</p>
         </div>
         <div class="avatar">
           <img :src="user.avatar" alt="user avatar" />
@@ -33,7 +33,6 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import ListHeader from "./ListHeader.vue";
-import ListItem from "./ListItem.vue";
 
 interface Raw {
   name: string;
@@ -49,7 +48,7 @@ const url = "https://60feae682574110017078723.mockapi.io/users";
 
 export default defineComponent({
   name: "List",
-  components: { ListHeader, ListItem },
+  components: { ListHeader },
   data() {
     return {
       usersRaw: null || (Object as PropType<Raw>),
