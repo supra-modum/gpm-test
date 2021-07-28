@@ -1,22 +1,17 @@
 <template>
   <div class="app-container">
-    <Header />
-    <main>
-      <List />
-    </main>
+    <employees-list />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import List from "./components/List.vue";
-import Header from "./components/Header.vue";
+import EmployeesList from "./components/EmployeesList.vue";
 
 export default defineComponent({
   name: "App",
   components: {
-    List,
-    Header,
+    EmployeesList,
   },
 });
 </script>
