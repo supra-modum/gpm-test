@@ -10,7 +10,7 @@
         </div>
         <div class="name">
           <p class="name-paragraph">{{ user.name }}</p>
-          <p class="email-paragraph">3mfhognm5@relay.firefox.com</p>
+          <p class="email-paragraph">{{ user.email }}</p>
         </div>
       </div>
       <div class="col code">
@@ -20,19 +20,20 @@
         <p>{{ user.designation }}</p>
       </div>
       <div class="col phone">
-        <p>{{ user.phone }}</p>
+        <p>{{ formatPhone(user.phone) }}</p>
       </div>
       <div class="col date">
         <p>{{ formatDate(user.joiningDate) }}</p>
       </div>
+      <div class="menu-more"></div>
     </li>
   </ul>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { API_URL } from "../model/constants";
-import { monthEnum } from "../model/date";
+import { defineComponent, PropType } from 'vue';
+import { API_URL, PHONE_REGEX } from '../model/constants';
+import { monthEnum } from '../model/date';
 
 interface Raw {
   name: string;
@@ -42,10 +43,11 @@ interface Raw {
   designation: string;
   joiningDate: string;
   id: number;
+  email: string;
 }
 
 export default defineComponent({
-  name: "ListComponent",
+  name: 'ListComponent',
   data() {
     return {
       usersRaw: null || (Object as PropType<Raw>),
@@ -59,6 +61,15 @@ export default defineComponent({
       const day = currentDate.getDate().toString();
 
       return `${monthEnum[month]} ${day}, ${year}`;
+    },
+    formatPhone(phone: string) {
+      const valid = PHONE_REGEX.test(phone);
+
+      const replacer = (validPhone: string) => {
+        const formatLetters = validPhone.replace(/\w/g, '');
+        return formatLetters.replace(/\(*\)/g, '');
+      };
+      return valid ? phone : 'Please, check your phone number';
     },
   },
   async mounted() {
@@ -84,7 +95,12 @@ ul.employee-list {
     padding: 10px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     border-radius: 5px;
-    margin: 0.5rem 0;
+    margin: 14px 0;
+
+    &:hover {
+      box-shadow: rgba(149, 157, 165, 0.4) 0px 8px 24px;
+      transition: box-shadow ease-in-out 0.8s;
+    }
 
     .col {
       display: flex;
@@ -103,6 +119,10 @@ ul.employee-list {
 
       &.basic {
         flex-basis: 35%;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
 
         div.userId,
         div.name {
@@ -111,6 +131,9 @@ ul.employee-list {
             text-align: left;
             &.name-paragraph {
               font-weight: 800;
+            }
+            &.email-paragraph {
+              font-size: small;
             }
           }
         }
@@ -129,54 +152,69 @@ ul.employee-list {
       }
     }
   }
+  .menu-more::after {
+    content: '\2807';
+    color: slategray;
+    font-size: 20px;
+  }
 }
 
 @media (max-width: 960px) {
   ul.employee-list {
-    p {
-      text-align: center;
-      padding: 0.3rem 0.5rem;
-    }
+    display: flex;
+    flex-flow: column nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
 
     li.item {
       display: flex;
       flex-flow: column nowrap;
       justify-content: center;
       align-items: center;
-      padding: 1rem;
-
+      margin: 20px 0;
+      max-width: 400px;
+      min-width: 280px;
       .col {
         display: flex;
-        flex-flow: column nowrap;
+        flex-flow: row nowrap;
         align-content: center;
         justify-content: center;
         align-items: center;
 
-        &.basic {
-          flex-basis: 40%;
+        p {
+          margin: 0;
+          padding: 10px;
+        }
 
+        &.basic {
+          display: flex;
+          flex-flow: column nowrap;
+          justify-content: flex-start;
+          align-items: center;
+
+          div.userId {
+            display: none;
+          }
           div.name {
             p {
               text-align: center;
             }
           }
-
-          div.userId {
-            display: none;
+          img {
+            width: 60px;
+            padding: 10px;
           }
         }
 
-        &.designation,
-        &.phone {
-          flex-basis: 20%;
-        }
-
-        &.date,
         &.code {
           display: none;
         }
       }
     }
+  }
+  div.menu-more {
+    display: none;
   }
 }
 </style>
