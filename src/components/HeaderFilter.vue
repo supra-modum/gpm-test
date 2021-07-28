@@ -6,49 +6,24 @@
         <button class="add-employee" name="Add Employee">+ Add Employee</button>
       </div>
     </section>
-    <section class="filter">
-      <div class="col all">
-        <label for="all-select"
-          ><input
-            type="radio"
-            v-model="selectedValue"
-            value="All"
-            id="all-select"
-          />Employee List</label
-        >
-      </div>
-      <div class="col dev">
-        <label for="developer-select"
-          ><input
-            type="radio"
-            v-model="selectedValue"
-            value="Developer"
-            id="developer-select"
-          />Development</label
-        >
-      </div>
-      <div class="col managment">
-        <label for="manager-select"
-          ><input
-            type="radio"
-            v-model="selectedValue"
-            value="Manager"
-            id="manager-select"
-          />Managment</label
-        >
-      </div>
-    </section>
+    <div class="filter-container">
+      <ul class="filter-menu">
+        <li class="li-all">Employee List</li>
+        <li class="li-dev">Development</li>
+        <li class="li-m">Managment</li>
+      </ul>
+    </div>
   </header>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: "HeaderFilter",
+  name: 'HeaderFilter',
   data() {
     return {
-      selectedValue: "",
+      selectedCategory: 'All',
     };
   },
 });
@@ -56,7 +31,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 $actionColor: rgb(0, 220, 129);
-$basicPadding: 20px;
 
 header {
   display: flex;
@@ -69,49 +43,74 @@ header {
     font-size: 2rem;
   }
 
-  .button-col {
-    max-width: 200px;
-  }
-
   section.top-heading {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
   }
 
-  section.filter {
-    display: flex;
-    color: silver;
-    font-weight: 600;
-    border-bottom: 0.1rem solid rgb(222, 231, 227);
-    .col {
-      display: flex;
-      flex-flow: row nowrap;
-      align-content: center;
-      align-items: center;
-      justify-content: center;
-
-      &.all,
-      &.dev,
-      &.managment {
-        flex-basis: 15%;
-        text-align: center;
-        padding: 1rem 0;
-      }
-      &:hover,
-      &:active {
-        color: slategray;
-      }
-    }
+  .filter-container {
+    margin-bottom: 20px;
   }
 
-  button.add-employee {
+  .filter-menu {
+    color: silver;
+    font-weight: 600;
+    border-bottom: 1px solid rgb(222, 231, 227);
+    list-style: none;
+    display: flex;
+    flex-flow: row nowrap;
+    align-content: center;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+  }
+
+  .li-all,
+  .li-dev,
+  .li-m {
+    padding: 20px;
+    display: flex;
     text-align: center;
-    color: white;
-    background: $actionColor;
-    border-radius: 0.2rem;
-    border-style: none;
-    padding: 0.6rem 0.8rem;
+    flex-basis: 20%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0);
+
+    &:hover,
+    &:active {
+      color: slategray;
+      border-bottom-color: $actionColor;
+      transition: border-bottom ease-in-out 0.8s;
+    }
+  }
+}
+
+button.add-employee {
+  text-align: center;
+  color: white;
+  background: $actionColor;
+  border-radius: 5px;
+  border-style: none;
+  padding: 10px 20px;
+
+  &:hover {
+    box-shadow: rgba(149, 157, 165, 0.4) 0px 8px 24px;
+    transition: box-shadow ease-in-out 0.8s;
+  }
+}
+
+@media (max-width: 960px) {
+  header {
+    section.top-heading {
+      display: flex;
+      flex-flow: column nowrap;
+      align-content: center;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .filter-container {
+      display: none;
+    }
   }
 }
 </style>
