@@ -31,8 +31,8 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-
-const url = "https://60feae682574110017078723.mockapi.io/users";
+import { API_URL } from "../model/constants";
+import { monthEnum } from "../model/date";
 
 interface Raw {
   name: string;
@@ -53,20 +53,6 @@ export default defineComponent({
   },
   methods: {
     formatDate(date: string) {
-      enum monthEnum {
-        "Jan" = 1,
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      }
       let currentDate = new Date(date);
       const year = currentDate.getFullYear().toString();
       const month = currentDate.getMonth();
@@ -76,7 +62,7 @@ export default defineComponent({
     },
   },
   async mounted() {
-    const response = await fetch(url);
+    const response = await fetch(API_URL);
     const data = await response.json();
     const stringData = JSON.stringify(data);
     this.usersRaw = JSON.parse(stringData);
