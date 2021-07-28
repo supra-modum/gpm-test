@@ -8,13 +8,34 @@
     </section>
     <section class="filter">
       <div class="col all">
-        <label>Employee List</label>
+        <label for="all-select"
+          ><input
+            type="radio"
+            v-model="selectedValue"
+            value="All"
+            id="all-select"
+          />Employee List</label
+        >
       </div>
       <div class="col dev">
-        <label>Development</label>
+        <label for="developer-select"
+          ><input
+            type="radio"
+            v-model="selectedValue"
+            value="Developer"
+            id="developer-select"
+          />Development</label
+        >
       </div>
       <div class="col managment">
-        <label>Managment</label>
+        <label for="manager-select"
+          ><input
+            type="radio"
+            v-model="selectedValue"
+            value="Manager"
+            id="manager-select"
+          />Managment</label
+        >
       </div>
     </section>
   </header>
@@ -24,7 +45,12 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "Header",
+  name: "HeaderFilter",
+  data() {
+    return {
+      selectedValue: "",
+    };
+  },
 });
 </script>
 

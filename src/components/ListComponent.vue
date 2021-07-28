@@ -1,5 +1,4 @@
 <template>
-  <ListHeader />
   <ul class="employee-list">
     <li class="item" v-for="user in usersRaw" :key="user.id">
       <div class="col basic">
@@ -10,8 +9,8 @@
           <img :src="user.avatar" alt="user avatar" />
         </div>
         <div class="name">
-          <p>{{ user.name }}</p>
-          <p>3mfhognm5@relay.firefox.com</p>
+          <p class="name-paragraph">{{ user.name }}</p>
+          <p class="email-paragraph">3mfhognm5@relay.firefox.com</p>
         </div>
       </div>
       <div class="col code">
@@ -32,7 +31,8 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import ListHeader from "./ListHeader.vue";
+
+const url = "https://60feae682574110017078723.mockapi.io/users";
 
 interface Raw {
   name: string;
@@ -41,25 +41,15 @@ interface Raw {
   employeeCode: string;
   designation: string;
   joiningDate: string;
-  id: number | string;
+  id: number;
 }
 
-const url = "https://60feae682574110017078723.mockapi.io/users";
-
 export default defineComponent({
-  name: "List",
-  components: { ListHeader },
+  name: "ListComponent",
   data() {
     return {
       usersRaw: null || (Object as PropType<Raw>),
     };
-  },
-  async mounted() {
-    const response = await fetch(url);
-    const data = await response.json();
-    const stringData = JSON.stringify(data);
-    //@ts-ignore
-    this.usersRaw = JSON.parse(stringData);
   },
   methods: {
     formatDate(date: string) {
@@ -84,6 +74,12 @@ export default defineComponent({
 
       return `${monthEnum[month]} ${day}, ${year}`;
     },
+  },
+  async mounted() {
+    const response = await fetch(url);
+    const data = await response.json();
+    const stringData = JSON.stringify(data);
+    this.usersRaw = JSON.parse(stringData);
   },
 });
 </script>
@@ -127,6 +123,9 @@ ul.employee-list {
           p {
             padding: 0.3rem 0.5rem;
             text-align: left;
+            &.name-paragraph {
+              font-weight: 800;
+            }
           }
         }
         img {
@@ -138,12 +137,58 @@ ul.employee-list {
 
       &.code,
       &.phone,
-      &.date {
-        flex-basis: 15%;
-      }
-
+      &.date,
       &.designation {
         flex-basis: 15%;
+      }
+    }
+  }
+}
+
+@media (max-width: 960px) {
+  ul.employee-list {
+    p {
+      text-align: center;
+      padding: 0.3rem 0.5rem;
+    }
+
+    li.item {
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+
+      .col {
+        display: flex;
+        flex-flow: column nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+
+        &.basic {
+          flex-basis: 40%;
+
+          div.name {
+            p {
+              text-align: center;
+            }
+          }
+
+          div.userId {
+            display: none;
+          }
+        }
+
+        &.designation,
+        &.phone {
+          flex-basis: 20%;
+        }
+
+        &.date,
+        &.code {
+          display: none;
+        }
       }
     }
   }
