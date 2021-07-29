@@ -1,7 +1,7 @@
 <template>
-  <header-filter />
+  <header-filter @change-cat="handleChangeCat" />
   <list-header />
-  <list-component></list-component>
+  <list-component :currentCat="currentCat" />
 </template>
 
 <script lang="ts">
@@ -13,5 +13,15 @@ import ListComponent from './ListComponent.vue';
 export default defineComponent({
   name: 'EmployeesList',
   components: { ListHeader, ListComponent, HeaderFilter },
+  data() {
+    return {
+      currentCat: 'all'
+    }
+  },
+  methods: {
+    handleChangeCat(cat: string) {
+      this.currentCat = cat;  
+    }
+  }
 });
 </script>
