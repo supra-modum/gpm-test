@@ -1,5 +1,5 @@
 <template>
-  <ul class="employee-list">
+  <ul v-if="usersRaw" class="employee-list">
     <li class="item" v-for="user in usersRaw" :key="user.id">
       <div class="col basic">
         <div class="userId">
@@ -48,35 +48,54 @@ interface Raw {
 
 export default defineComponent({
   name: 'ListComponent',
-  data() {
+  data(): { usersRaw: Raw[] | null, users: Raw[] | null } {
     return {
-      usersRaw: null || (Object as PropType<Raw>),
+      usersRaw: null,
+      users: null
     };
+  },
+  props: {
+    currentCat: {
+      type: String,
+      required: true,
+    }
   },
   methods: {
     formatDate(date: string) {
       let currentDate = new Date(date);
-      const year = currentDate.getFullYear().toString();
-      const month = currentDate.getMonth();
-      const day = currentDate.getDate().toString();
+      // const year = currentDate.getFullYear().toString();
+      // const month = currentDate.getMonth();
+      // const day = currentDate.getDate().toString();
 
-      return `${monthEnum[month]} ${day}, ${year}`;
+      // return `${monthEnum[month]} ${day}, ${year}`;
+      return new Intl.DateTimeFormat('ru').format(currentDate)
     },
     formatPhone(phone: string) {
       const valid = PHONE_REGEX.test(phone);
 
-      const replacer = (validPhone: string) => {
-        const formatLetters = validPhone.replace(/\w/g, '');
-        return formatLetters.replace(/\(*\)/g, '');
-      };
+      // const replacer = (validPhone: string) => {
+      //   const formatLetters = validPhone.replace(/\w/g, '');
+      //   return formatLetters.replace(/\(*\)/g, '');
+      // };
       return valid ? phone : 'Please, check your phone number';
     },
+  },
+  watch: {
+    currentCat(value) {
+      if (value === 'all') {
+        this.usersRaw = this.users;
+        return;
+      }
+
+      this.usersRaw = this.users?.filter((user) => user.designation === value);
+    }
   },
   async mounted() {
     const response = await fetch(API_URL);
     const data = await response.json();
     const stringData = JSON.stringify(data);
-    this.usersRaw = JSON.parse(stringData);
+    this.users = JSON.parse(stringData);
+    this.usersRaw = this.users;
   },
 });
 </script>

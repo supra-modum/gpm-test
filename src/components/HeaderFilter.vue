@@ -8,9 +8,9 @@
     </section>
     <div class="filter-container">
       <ul class="filter-menu">
-        <li class="li-all">Employee List</li>
-        <li class="li-dev">Development</li>
-        <li class="li-m">Managment</li>
+        <li class="li-all" :class="calcActiveClass('all')" @click="handleFilterClick('all')">Employee List</li>
+        <li class="li-dev" :class="calcActiveClass('Developer')" @click="handleFilterClick('Developer')">Development</li>
+        <li class="li-m" :class="calcActiveClass('Manager')" @click="handleFilterClick('Manager')">Managment</li>
       </ul>
     </div>
   </header>
@@ -23,9 +23,19 @@ export default defineComponent({
   name: 'HeaderFilter',
   data() {
     return {
-      selectedCategory: 'All',
+      selectedCategory: 'all',
     };
   },
+  methods: {
+    handleFilterClick(cat: string) {
+      this.selectedCategory = cat;
+      this.$emit('changeCat', cat);
+    },
+    calcActiveClass(cat: string) {
+      if (this.selectedCategory === cat) return 'active'
+      return '';
+    }
+  }
 });
 </script>
 
@@ -72,9 +82,10 @@ header {
     padding: 20px;
     display: flex;
     text-align: center;
-    flex-basis: 20%;
+    margin: 0 20px;
     border-bottom: 1px solid rgba(0, 0, 0, 0);
 
+    &.active,
     &:hover,
     &:active {
       color: slategray;
